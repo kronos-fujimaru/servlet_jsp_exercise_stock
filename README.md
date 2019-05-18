@@ -572,9 +572,18 @@ a {
         </div>
         <form action="" method="">
             <table class="block-center">
-                <tr><td class="text-right">商品名：</td><td><p><input type="text" class="form-text" name="item" placeholder=" 20文字以内" required></p></td></tr>
-                <tr><td class="text-right">価格：</td><td><p><input type="number" class="form-number" name="price" min="0" value="0" required></p></td></tr>
-                <tr><td class="text-right">数量：</td><td><p><input type="number" class="form-number" name="quantity" min="0" max="100" value="0" required></p></td></tr>
+                <tr>
+                    <td class="text-right">商品名：</td>
+                    <td><p><input type="text" class="form-text" name="item" placeholder=" 20文字以内" required></p></td>
+                </tr>
+                <tr>
+                    <td class="text-right">価格：</td>
+                    <td><p><input type="number" class="form-number" name="price" min="0" value="0" required></p></td>
+                </tr>
+                <tr>
+                    <td class="text-right">数量：</td>
+                    <td><p><input type="number" class="form-number" name="quantity" min="0" max="100" value="0" required></p></td>
+                </tr>
                 <tr><td colspan="2" class="text-center"><p><button type="submit" class="btn-default">SEND</button></p></td></tr>
             </table>
         </form>
