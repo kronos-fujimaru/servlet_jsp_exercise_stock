@@ -480,7 +480,7 @@ a {
 
 ※在庫データが一覧表示されるように修正してください。
 
-```java
+```html
 <%@ page contentType="text/html; charset=UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -544,7 +544,7 @@ a {
 
 ※在庫データの登録、更新ができるように修正してください。
 
-```java
+```html
 <%@ page contentType="text/html; charset=UTF-8"%>
 <!DOCTYPE html>
 <html>

@@ -254,7 +254,7 @@ public class DeleteStockController extends HttpServlet {
 
 #### list.jsp
 
-```java
+```html
 <%@page import="java.text.NumberFormat"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="jp.shop.dto.Stock"%>
@@ -340,7 +340,7 @@ public class DeleteStockController extends HttpServlet {
 
 #### form.jsp
 
-```java
+```html
 <%@page import="jp.shop.dto.Stock"%>
 <%@page import="java.util.List"%>
 <%@ page contentType="text/html; charset=UTF-8"%>
@@ -417,7 +417,7 @@ public class DeleteStockController extends HttpServlet {
 
 #### list.jsp（EL、JSTL使用）
 
-```java
+```html
 <%@page import="java.text.NumberFormat"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="jp.shop.dto.Stock"%>
@@ -495,7 +495,7 @@ public class DeleteStockController extends HttpServlet {
 
 #### form.jsp（EL、JSTL使用）
 
-```java
+```html
 <%@page import="jp.shop.dto.Stock"%>
 <%@page import="java.util.List"%>
 <%@ page contentType="text/html; charset=UTF-8"%>
