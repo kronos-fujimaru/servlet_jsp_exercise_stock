@@ -63,7 +63,7 @@ Eclipse上にStockManageプロジェクトを作成し、以下の構成でフ�
 
 **STOCKテーブル**
 
-sample_shopデータベースを作成し、以下のテーブルを作成する。
+sample_shopデータベースを作成し、STOCKテーブルを作成する。
 
 | 列名 | データ型 | PK | UK | FK | Not Null | 備考 |
 |------|---------|:--:|:--:|:--:|:--------:|------|
@@ -72,6 +72,8 @@ sample_shopデータベースを作成し、以下のテーブルを作成する
 | PRICE | INT(11) |  |  |  | 〇 |  |
 | QUANTITY | INT(11) |  |  |  | 〇 |  |
 | UPDATE_DATE | TIMESTAMP |  |  |  | 〇 | 既定値：現在日時 |
+
+MySQLで以下のコマンド実行する。
 
 ```sql
 CREATE TABLE STOCK (
@@ -94,7 +96,9 @@ INSERT INTO stock (item, price, quantity) VALUES ('水深10mで使えるキー�
 INSERT INTO stock (item, price, quantity) VALUES ('エアーマウス', 5680, 10);
 ```
 
-**StockDAO.java**
+<br>
+
+**StockDAO.java**（完成済み）
 
 ```java
 package jp.shop.dao;
@@ -248,7 +252,9 @@ public class StockDAO {
 }
 ```
 
-**Stock.java**
+<br>
+
+**Stock.java**（完成済み）
 
 ```java
 package jp.shop.dto;
@@ -307,111 +313,9 @@ public class Stock {
 }
 ```
 
-**list.jsp（在庫一覧画面）**
+<br>
 
-```java
-<%@ page contentType="text/html; charset=UTF-8"%>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>在庫管理システム</title>
-<link rel="stylesheet" href="css/style.css">
-</head>
-<body>
-    <header>
-        <h1>ケロノス雑貨 総本店</h1>
-    </header>
-    <nav>
-        <div>
-            <label>メニュー</label>
-        </div>
-        <ul>
-            <li><a href="#">在庫一覧表示</a></li>
-            <li><a href="#">在庫登録</a></li>
-        </ul>
-    </nav>
-    <article>
-        <div class="text-center">
-            <h2>在庫一覧</h2>
-        </div>
-        <div>
-            <table class="table-list block-center">
-                <thead>
-                    <tr>
-                        <th class="width-id">ID</th>
-                        <th class="width-name">商品名</th>
-                        <th class="width-number">価格</th>
-                        <th class="width-number">数量</th>
-                        <th class="width-date">更新日</th>
-                        <th class="width-btn"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="tr-active">
-                        <td class="width-id text-center"></td>
-                        <td class="width-name"></td>
-                        <td class="width-number text-right"></td>
-                        <td class="width-number text-right"></td>
-                        <td class="width-date text-center"></td>
-                        <td class="width-btn text-center"></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </article>
-    <footer>
-        <label>Copyright (c) 20xx. Kelonos Co, Ltd All Rights Reserved.</label>
-    </footer>
-</body>
-</html>
-```
-
-**form.jsp（在庫登録画面、在庫更新画面）**
-
-```java
-<%@ page contentType="text/html; charset=UTF-8"%>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>在庫管理システム</title>
-<link rel="stylesheet" href="css/style.css">
-</head>
-<body>
-    <header>
-        <h1>ケロノス雑貨 総本店</h1>
-    </header>
-    <nav>
-        <div>
-            <label>メニュー</label>
-        </div>
-        <ul>
-            <li><a href="#">在庫一覧表示</a></li>
-            <li><a href="#">在庫登録</a></li>
-        </ul>
-    </nav>
-    <article>
-        <div class="text-center">
-            <h2>在庫登録</h2>
-        </div>
-        <form action="" method="">
-            <table class="block-center">
-                <tr><td class="text-right">商品名：</td><td><p><input type="text" class="form-text" name="item" placeholder=" 20文字以内" required></p></td></tr>
-                <tr><td class="text-right">価格：</td><td><p><input type="number" class="form-number" name="price" min="0" value="0" required></p></td></tr>
-                <tr><td class="text-right">数量：</td><td><p><input type="number" class="form-number" name="quantity" min="0" max="100" value="0" required></p></td></tr>
-                <tr><td colspan="2" class="text-center"><p><button type="submit" class="btn-default">SEND</button></p></td></tr>
-            </table>
-        </form>
-    </article>
-    <footer>
-        <label>Copyright (c) 20xx. Kelonos Co, Ltd All Rights Reserved.</label>
-    </footer>
-</body>
-</html>
-```
-
-**style.css**
+**style.css**（完成済み）
 
 ```css
 header {
@@ -568,4 +472,116 @@ a {
 .font-red {
     color: #FF0000;
 }
+```
+
+<br>
+
+**list.jsp（在庫一覧画面）**
+
+※在庫データが一覧表示されるように修正してください。
+
+```java
+<%@ page contentType="text/html; charset=UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>在庫管理システム</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <h1>ケロノス雑貨 総本店</h1>
+    </header>
+    <nav>
+        <div>
+            <label>メニュー</label>
+        </div>
+        <ul>
+            <li><a href="#">在庫一覧表示</a></li>
+            <li><a href="#">在庫登録</a></li>
+        </ul>
+    </nav>
+    <article>
+        <div class="text-center">
+            <h2>在庫一覧</h2>
+        </div>
+        <div>
+            <table class="table-list block-center">
+                <thead>
+                    <tr>
+                        <th class="width-id">ID</th>
+                        <th class="width-name">商品名</th>
+                        <th class="width-number">価格</th>
+                        <th class="width-number">数量</th>
+                        <th class="width-date">更新日</th>
+                        <th class="width-btn"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="tr-active">
+                        <td class="width-id text-center"></td>
+                        <td class="width-name"></td>
+                        <td class="width-number text-right"></td>
+                        <td class="width-number text-right"></td>
+                        <td class="width-date text-center"></td>
+                        <td class="width-btn text-center"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </article>
+    <footer>
+        <label>Copyright (c) 20xx. Kelonos Co, Ltd All Rights Reserved.</label>
+    </footer>
+</body>
+</html>
+```
+
+<br>
+
+**form.jsp（在庫登録画面、在庫更新画面）**
+
+※在庫データの登録、更新ができるように修正してください。
+
+```java
+<%@ page contentType="text/html; charset=UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>在庫管理システム</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <h1>ケロノス雑貨 総本店</h1>
+    </header>
+    <nav>
+        <div>
+            <label>メニュー</label>
+        </div>
+        <ul>
+            <li><a href="#">在庫一覧表示</a></li>
+            <li><a href="#">在庫登録</a></li>
+        </ul>
+    </nav>
+    <article>
+        <div class="text-center">
+            <h2>在庫登録</h2>
+        </div>
+        <form action="" method="">
+            <table class="block-center">
+                <tr><td class="text-right">商品名：</td><td><p><input type="text" class="form-text" name="item" placeholder=" 20文字以内" required></p></td></tr>
+                <tr><td class="text-right">価格：</td><td><p><input type="number" class="form-number" name="price" min="0" value="0" required></p></td></tr>
+                <tr><td class="text-right">数量：</td><td><p><input type="number" class="form-number" name="quantity" min="0" max="100" value="0" required></p></td></tr>
+                <tr><td colspan="2" class="text-center"><p><button type="submit" class="btn-default">SEND</button></p></td></tr>
+            </table>
+        </form>
+    </article>
+    <footer>
+        <label>Copyright (c) 20xx. Kelonos Co, Ltd All Rights Reserved.</label>
+    </footer>
+</body>
+</html>
 ```
