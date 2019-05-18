@@ -1,10 +1,10 @@
 # 在庫管理アプリケーション（Servlet/JSP演習）
 
-### 処理概要
+## 処理概要
 
 あるショップの在庫管理をするWebアプリケーションを作成する。以下の機能を実装する。
 
-**1. 在庫一覧画面**
+#### 1. 在庫一覧画面
 
 <img src="images/list-stock.png" alt="在庫一覧画面" width="800">
 
@@ -19,7 +19,7 @@
 
 <hr>
 
-**2. 在庫登録画面**
+#### 2. 在庫登録画面
 
 <img src="images/create-stock.png" alt="在庫登録画面" width="800">
 
@@ -32,7 +32,7 @@
 
 <hr>
 
-**3. 在庫更新画面**
+#### 3. 在庫更新画面
 
 <img src="images/update-stock.png" alt="在庫更新画面" width="800">
 
@@ -45,7 +45,7 @@
 
 <br>
 
-### プロジェクト構成
+## プロジェクト構成
 
 Eclipse上にStockManageプロジェクトを作成し、以下の構成でファイルを作成する。
 
@@ -59,7 +59,7 @@ Eclipse上にStockManageプロジェクトを作成し、以下の構成でフ�
 
 <br>
 
-### テンプレート
+## テンプレート
 
 **STOCKテーブル**
 
@@ -98,7 +98,7 @@ INSERT INTO stock (item, price, quantity) VALUES ('エアーマウス', 5680, 10
 
 <br>
 
-**StockDAO.java**（完成済み）
+**StockDAO.java（パッケージ：jp.shop.dao）** ※完成済み
 
 ```java
 package jp.shop.dao;
@@ -254,7 +254,7 @@ public class StockDAO {
 
 <br>
 
-**Stock.java**（完成済み）
+**Stock.java（パッケージ：jp.shop.dto）** ※完成済み
 
 ```java
 package jp.shop.dto;
@@ -315,7 +315,7 @@ public class Stock {
 
 <br>
 
-**style.css**（完成済み）
+**style.css（ディレクトリ：WebContent/css）** ※完成済み
 
 ```css
 header {
@@ -366,7 +366,7 @@ footer {
 }
 
 input[type="number"] {
-    width: 80px;
+    width: 100px;
     text-align: right;
 }
 
@@ -578,7 +578,7 @@ a {
                 </tr>
                 <tr>
                     <td class="text-right">価格：</td>
-                    <td><p><input type="number" class="form-number" name="price" min="0" value="0" required></p></td>
+                    <td><p><input type="number" class="form-number" name="price" min="0" max="1000000" value="0" required></p></td>
                 </tr>
                 <tr>
                     <td class="text-right">数量：</td>
