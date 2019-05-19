@@ -87,7 +87,7 @@ CREATE TABLE STOCK (
 ```sql
 INSERT INTO stock (item, price, quantity) VALUES ('ヨコクノート', 120, 20);
 INSERT INTO stock (item, price, quantity) VALUES ('消せるボールペン', 180, 30);
-INSERT INTO stock (item, price, quantity) VALUES ('消しゴム（カドケシ）', 200, 10);
+INSERT INTO stock (item, price, quantity) VALUES ('カドケシ', 200, 10);
 INSERT INTO stock (item, price, quantity) VALUES ('消せないランプ', 3980, 5);
 INSERT INTO stock (item, price, quantity) VALUES ('昔治タオル', 2800, 8);
 INSERT INTO stock (item, price, quantity) VALUES ('令和チョコレート', 100, 50);

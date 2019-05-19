@@ -50,24 +50,24 @@ public class ListStockController extends HttpServlet {
 
         try (Connection con = DataSourceManager.getConnection()) {
 
+            // 在庫データを全件取得する
             StockDAO dao = new StockDAO(con);
             List<Stock> listStock = dao.findAll();
 
+            HttpSession session = request.getSession(false);
+            if (session != null) {
+                // セッションにメッセージがある場合、リクエストに格納し直す
+                request.setAttribute("message", (String)session.getAttribute("message"));
+                session.removeAttribute("message");
+            }
             request.setAttribute("listStock", listStock);
 
+            // 在庫一覧画面に遷移する
             request.getRequestDispatcher("/WEB-INF/list.jsp").forward(request, response);
 
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
-
-    }
-
-    /**
-     * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-     */
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        doGet(request, response);
     }
 }
 ```
@@ -94,7 +94,7 @@ public class CreateStockController extends HttpServlet {
      * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.getRequestDispatcher("/WEB-INF/form.jsp").forward(request, response);
+        response.sendRedirect("list-stock");
     }
 
     /**
@@ -105,23 +105,29 @@ public class CreateStockController extends HttpServlet {
 
         request.setCharacterEncoding("UTF-8");
 
+        // リクエストからパラメータを取り出す
         String item = request.getParameter("item");
         int price = Integer.parseInt(request.getParameter("price"));
         int quantity = Integer.parseInt(request.getParameter("quantity"));
 
+        // 登録内容を保持するStockクラスのインスタンスを生成する
         Stock newStock = new Stock(item, price, quantity);
+        HttpSession session = request.getSession();
 
         try (Connection con = DataSourceManager.getConnection()) {
 
+            // 在庫情報を登録する
             StockDAO dao = new StockDAO(con);
             dao.create(newStock);
-            request.setAttribute("message", "在庫情報を登録しました。");
+
+            session.setAttribute("message", "在庫情報を登録しました。");
 
         } catch (SQLException | ClassNotFoundException e) {
-            request.setAttribute("message", "在庫情報の登録に失敗しました。");
+            session.setAttribute("message", "在庫情報の登録に失敗しました。");
         }
 
-        request.getRequestDispatcher("list-stock").forward(request, response);
+        // 在庫一覧処理へリダイレクトする
+        response.sendRedirect("list-stock");
     }
 }
 ```
@@ -153,12 +159,14 @@ public class UpdateStockController extends HttpServlet {
         try {
             id = Integer.parseInt(request.getParameter("id"));
         } catch (NumberFormatException e) {
+            // パラメータのIDが正しく設定されたいない場合、在庫一覧処理へリダイレクトする
             response.sendRedirect("list-stock");
             return;
         }
 
         try (Connection con = DataSourceManager.getConnection()) {
 
+            // 更新対象の在庫データを取得する
             StockDAO dao = new StockDAO(con);
             Stock stock = dao.findById(id);
 
@@ -171,7 +179,8 @@ public class UpdateStockController extends HttpServlet {
             request.getRequestDispatcher("/WEB-INF/form.jsp").forward(request, response);
 
         } catch (SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
+            response.sendRedirect("list-stock");
+            return;
         }
     }
 
@@ -182,24 +191,30 @@ public class UpdateStockController extends HttpServlet {
 
         request.setCharacterEncoding("UTF-8");
 
+        // リクエストからパラメータを取り出す
         int id = Integer.parseInt(request.getParameter("id"));
         String item = request.getParameter("item");
         int price = Integer.parseInt(request.getParameter("price"));
         int quantity = Integer.parseInt(request.getParameter("quantity"));
 
+        // 更新内容を保持するStockクラスのインスタンスを生成する
         Stock newStock = new Stock(item, price, quantity);
+        HttpSession session = request.getSession();
 
         try (Connection con = DataSourceManager.getConnection()) {
 
+            // 在庫情報を更新する
             StockDAO dao = new StockDAO(con);
             dao.update(newStock, id);
-            request.setAttribute("message", "在庫情報を更新しました。");
+
+            session.setAttribute("message", "在庫情報を更新しました。");
 
         } catch (SQLException | ClassNotFoundException e) {
-            request.setAttribute("message", "在庫情報の更新に失敗しました。");
+            session.setAttribute("message", "在庫情報の更新に失敗しました。");
         }
 
-        request.getRequestDispatcher("list-stock").forward(request, response);
+        // 在庫一覧処理へリダイレクトする
+        response.sendRedirect("list-stock");
     }
 }
 ```
@@ -233,19 +248,25 @@ public class DeleteStockController extends HttpServlet {
      */
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+        // リクエストからパラメータを取り出す
         int id = Integer.parseInt(request.getParameter("id"));
+
+        HttpSession session = request.getSession();
 
         try (Connection con = DataSourceManager.getConnection()) {
 
+            // 在庫情報を削除する
             StockDAO dao = new StockDAO(con);
             dao.delete(id);
-            request.setAttribute("message", "在庫情報を削除しました。");
+
+            session.setAttribute("message", "在庫情報を削除しました。");
 
         } catch (SQLException | ClassNotFoundException e) {
-            request.setAttribute("message", "在庫情報の削除に失敗しました。");
+            session.setAttribute("message", "在庫情報の削除に失敗しました。");
         }
 
-        request.getRequestDispatcher("list-stock").forward(request, response);
+        // 在庫一覧処理へリダイレクトする
+        response.sendRedirect("list-stock");
     }
 }
 ```
@@ -307,14 +328,14 @@ public class DeleteStockController extends HttpServlet {
                         for (Stock stock : listStock) {
                     %>
                     <tr class="tr-active">
-                        <td class="width-id text-center"><a href="update-stock?id=<%=stock.getId()%>"><%=stock.getId()%></a></td>
-                        <td class="width-name"><%=stock.getItem()%></td>
-                        <td class="width-number text-right"><%=nf.format(stock.getPrice())%></td>
-                        <td class="width-number text-right"><%=stock.getQuantity()%></td>
+                        <td class="width-id text-center"><a href="update-stock?id=<%= stock.getId() %>"><%=stock.getId()%></a></td>
+                        <td class="width-name"><%= stock.getItem() %></td>
+                        <td class="width-number text-right"><%= nf.format(stock.getPrice()) %></td>
+                        <td class="width-number text-right"><%= stock.getQuantity() %></td>
                         <td class="width-date text-center"><%= sdf.format(stock.getUpdateDate()) %></td>
                         <td class="width-btn text-center">
                             <form action="delete-stock" method="post">
-                                <input type="hidden" name="id" value="<%=stock.getId()%>">
+                                <input type="hidden" name="id" value="<%= stock.getId() %>">
                                 <button type="submit" class="btn-delete">DELETE</button>
                             </form>
                         </td>
@@ -414,6 +435,37 @@ public class DeleteStockController extends HttpServlet {
 <br>
 
 ## 解答例（参考）
+
+#### DataSourceManager.java（パッケージ：jp.kronos） ※コネクションプール利用
+
+```java
+package jp.shop;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.servlet.ServletException;
+import javax.sql.DataSource;
+
+public class DataSourceManager {
+
+    public static Connection getConnection() throws ServletException, NamingException, SQLException {
+        try {
+            Context context = new InitialContext();
+            DataSource dataSource = (DataSource) context.lookup("java:comp/env/jdbc/mysql");
+            return dataSource.getConnection();
+        } catch (NamingException e) {
+            throw e;
+        } catch (SQLException e) {
+            throw e;
+        }
+    }
+
+}
+```
 
 #### list.jsp（EL、JSTL使用）
 
