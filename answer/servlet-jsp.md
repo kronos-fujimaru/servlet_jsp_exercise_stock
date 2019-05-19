@@ -470,10 +470,6 @@ public class DataSourceManager {
 #### list.jsp（EL、JSTL使用）
 
 ```html
-<%@page import="java.text.NumberFormat"%>
-<%@page import="java.text.SimpleDateFormat"%>
-<%@page import="jp.shop.dto.Stock"%>
-<%@page import="java.util.List"%>
 <%@ page contentType="text/html; charset=UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
@@ -548,8 +544,6 @@ public class DataSourceManager {
 #### form.jsp（EL、JSTL使用）
 
 ```html
-<%@page import="jp.shop.dto.Stock"%>
-<%@page import="java.util.List"%>
 <%@ page contentType="text/html; charset=UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
