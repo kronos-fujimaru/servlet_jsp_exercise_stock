@@ -47,7 +47,7 @@
 
 ## プロジェクト構成
 
-Eclipse上にStockManageプロジェクトを作成し、以下の構成でファイルを作成する。
+Eclipse上にstock_manageプロジェクトを作成し、以下の構成でファイルを作成する。
 
 <table>
 <tr><td>src/jp.shop.controller</td><td>サーブレット（コントローラ）</td></tr>
@@ -315,7 +315,7 @@ public class Stock {
 
 <br>
 
-**style.css（ディレクトリ：WebContent/css）** ※完成済み
+**style.css（フォルダ：WebContent/css）** ※完成済み
 
 ```css
 header {
@@ -595,4 +595,8 @@ a {
 </html>
 ```
 
-[解答例](/answer/servlet-jsp.md)
+<br>
+
+[解答例](/answer/servlet-jsp-01.md)
+
+[解答例（コネクションプール、EL式、JSTL）](/answer/servlet-jsp-02.md)

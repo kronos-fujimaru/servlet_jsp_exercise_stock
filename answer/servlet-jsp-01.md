@@ -2,7 +2,11 @@
 
 ## 解答例
 
-#### DataSourceManager.java（パッケージ：jp.kronos）
+#### フォルダ構成
+
+<img src="../images/folder-configuration.png" alt="在庫一覧画面" width="400">
+
+#### DataSourceManager.java（パッケージ：jp.shop）
 
 ```java
 package jp.shop;
@@ -16,7 +20,7 @@ public class DataSourceManager {
     public static Connection getConnection() throws SQLException, ClassNotFoundException {
         String url = "jdbc:mysql://localhost:3306/sample_shop?useSSL=false";
         String user = "root";
-        String password = "kronos";
+        String password = "";
 
         Class.forName("com.mysql.jdbc.Driver");
         return DriverManager.getConnection(url, user, password);
@@ -27,19 +31,31 @@ public class DataSourceManager {
 
 <br>
 
-#### ListStockController.java（パッケージ：jp.kronos.controller）
+#### ListStockController.java（パッケージ：jp.shop.controller）
 
 ```java
 package jp.shop.controller;
+
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import jp.shop.DataSourceManager;
 import jp.shop.dao.StockDAO;
 import jp.shop.dto.Stock;
 
 /**
- * Servlet implementation class StockListController
+ * Servlet implementation class ListStockController
  */
-@WebServlet("/list-stock")
+@WebServlet("/list_stock")
 public class ListStockController extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
@@ -74,10 +90,21 @@ public class ListStockController extends HttpServlet {
 
 <br>
 
-#### CreateStockController.java（パッケージ：jp.kronos.controller）
+#### CreateStockController.java（パッケージ：jp.shop.controller）
 
 ```java
 package jp.shop.controller;
+
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import jp.shop.DataSourceManager;
 import jp.shop.dao.StockDAO;
@@ -86,7 +113,7 @@ import jp.shop.dto.Stock;
 /**
  * Servlet implementation class CreateStockController
  */
-@WebServlet("/create-stock")
+@WebServlet("/create_stock")
 public class CreateStockController extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
@@ -94,7 +121,7 @@ public class CreateStockController extends HttpServlet {
      * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.sendRedirect("list-stock");
+        request.getRequestDispatcher("/WEB-INF/form.jsp").forward(request, response);
     }
 
     /**
@@ -127,17 +154,28 @@ public class CreateStockController extends HttpServlet {
         }
 
         // 在庫一覧処理へリダイレクトする
-        response.sendRedirect("list-stock");
+        response.sendRedirect("/stock_manage/list_stock");
     }
 }
 ```
 
 <br>
 
-#### UpdateStockController.java（パッケージ：jp.kronos.controller）
+#### UpdateStockController.java（パッケージ：jp.shop.controller）
 
 ```java
 package jp.shop.controller;
+
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import jp.shop.DataSourceManager;
 import jp.shop.dao.StockDAO;
@@ -146,7 +184,7 @@ import jp.shop.dto.Stock;
 /**
  * Servlet implementation class UpdateStockController
  */
-@WebServlet("/update-stock")
+@WebServlet("/update_stock")
 public class UpdateStockController extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
@@ -159,8 +197,8 @@ public class UpdateStockController extends HttpServlet {
         try {
             id = Integer.parseInt(request.getParameter("id"));
         } catch (NumberFormatException e) {
-            // パラメータのIDが正しく設定されたいない場合、在庫一覧処理へリダイレクトする
-            response.sendRedirect("list-stock");
+            // パラメータのIDが正しく設定されていない場合、在庫一覧処理へリダイレクトする
+            response.sendRedirect("/stock_manage/list_stock");
             return;
         }
 
@@ -171,7 +209,8 @@ public class UpdateStockController extends HttpServlet {
             Stock stock = dao.findById(id);
 
             if (stock == null) {
-                response.sendRedirect("list-stock");
+                // 対象データがない場合、在庫一覧処理へリダイレクトする
+                response.sendRedirect("/stock_manage/list_stock");
                 return;
             }
 
@@ -179,7 +218,7 @@ public class UpdateStockController extends HttpServlet {
             request.getRequestDispatcher("/WEB-INF/form.jsp").forward(request, response);
 
         } catch (SQLException | ClassNotFoundException e) {
-            response.sendRedirect("list-stock");
+            response.sendRedirect("/stock_manage/list_stock");
             return;
         }
     }
@@ -214,17 +253,28 @@ public class UpdateStockController extends HttpServlet {
         }
 
         // 在庫一覧処理へリダイレクトする
-        response.sendRedirect("list-stock");
+        response.sendRedirect("/stock_manage/list_stock");
     }
 }
 ```
 
 <br>
 
-#### DeleteStockController.java（パッケージ：jp.kronos.controller）
+#### DeleteStockController.java（パッケージ：jp.shop.controller）
 
 ```java
 package jp.shop.controller;
+
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import jp.shop.DataSourceManager;
 import jp.shop.dao.StockDAO;
@@ -232,7 +282,7 @@ import jp.shop.dao.StockDAO;
 /**
  * Servlet implementation class DeleteStockController
  */
-@WebServlet("/delete-stock")
+@WebServlet("/delete_stock")
 public class DeleteStockController extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
@@ -240,7 +290,7 @@ public class DeleteStockController extends HttpServlet {
      * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.sendRedirect("list-stock");
+        response.sendRedirect("/stock_manage/list_stock");
     }
 
     /**
@@ -266,7 +316,7 @@ public class DeleteStockController extends HttpServlet {
         }
 
         // 在庫一覧処理へリダイレクトする
-        response.sendRedirect("list-stock");
+        response.sendRedirect("/stock_manage/list_stock");
     }
 }
 ```
@@ -303,8 +353,8 @@ public class DeleteStockController extends HttpServlet {
             <label>メニュー</label>
         </div>
         <ul>
-            <li><a href="list-stock">在庫一覧表示</a></li>
-            <li><a href="create-stock">在庫登録</a></li>
+            <li><a href="/stock_manage/list_stock">在庫一覧表示</a></li>
+            <li><a href="/stock_manage/create_stock">在庫登録</a></li>
         </ul>
     </nav>
     <article>
@@ -328,14 +378,14 @@ public class DeleteStockController extends HttpServlet {
                         for (Stock stock : listStock) {
                     %>
                     <tr class="tr-active">
-                        <td class="width-id text-center"><a href="update-stock?id=<%= stock.getId() %>"><%=stock.getId()%></a></td>
-                        <td class="width-name"><%= stock.getItem() %></td>
-                        <td class="width-number text-right"><%= nf.format(stock.getPrice()) %></td>
-                        <td class="width-number text-right"><%= stock.getQuantity() %></td>
+                        <td class="width-id text-center"><a href="/stock_manage/update_stock?id=<%=stock.getId()%>"><%=stock.getId()%></a></td>
+                        <td class="width-name"><%=stock.getItem()%></td>
+                        <td class="width-number text-right"><%=nf.format(stock.getPrice())%></td>
+                        <td class="width-number text-right"><%=stock.getQuantity()%></td>
                         <td class="width-date text-center"><%= sdf.format(stock.getUpdateDate()) %></td>
                         <td class="width-btn text-center">
-                            <form action="delete-stock" method="post">
-                                <input type="hidden" name="id" value="<%= stock.getId() %>">
+                            <form action="/stock_manage/delete_stock" method="post">
+                                <input type="hidden" name="id" value="<%=stock.getId()%>">
                                 <button type="submit" class="btn-delete">DELETE</button>
                             </form>
                         </td>
@@ -384,8 +434,8 @@ public class DeleteStockController extends HttpServlet {
             <label>メニュー</label>
         </div>
         <ul>
-            <li><a href="list-stock">在庫一覧表示</a></li>
-            <li><a href="create-stock">在庫登録</a></li>
+            <li><a href="/stock_manage/list_stock">在庫一覧表示</a></li>
+            <li><a href="/stock_manage/create_stock">在庫登録</a></li>
         </ul>
     </nav>
     <article>
@@ -393,7 +443,7 @@ public class DeleteStockController extends HttpServlet {
         <div class="text-center">
             <h2>在庫登録</h2>
         </div>
-        <form action="create-stock" method="post">
+        <form action="/stock_manage/create_stock" method="post">
             <table class="block-center">
                 <tr><td class="text-right">商品名：</td><td><p><input type="text" class="form-text" name="item" placeholder=" 20文字以内" required></p></td></tr>
                 <tr><td class="text-right">価格：</td><td><p><input type="number" class="form-number" name="price" min="0" max="1000000" value="0" required></p></td></tr>
@@ -405,7 +455,7 @@ public class DeleteStockController extends HttpServlet {
         <div class="text-center">
             <h2>在庫更新</h2>
         </div>
-        <form action="update-stock" method="post">
+        <form action="/stock_manage/update_stock" method="post">
             <table class="block-center">
                 <tr>
                     <td class="text-right">商品名：</td>
@@ -424,196 +474,6 @@ public class DeleteStockController extends HttpServlet {
             <input type="hidden" name="id" value="<%= stock.getId() %>">
         </form>
         <% } %>
-    </article>
-    <footer>
-        <label>Copyright (c) 20xx. Kelonos Co, Ltd All Rights Reserved.</label>
-    </footer>
-</body>
-</html>
-```
-
-<br>
-
-## 解答例（参考）
-
-#### DataSourceManager.java（パッケージ：jp.kronos） ※コネクションプール利用
-
-```java
-package jp.shop;
-
-import java.sql.Connection;
-import java.sql.SQLException;
-
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import javax.servlet.ServletException;
-import javax.sql.DataSource;
-
-public class DataSourceManager {
-
-    public static Connection getConnection() throws ServletException, NamingException, SQLException {
-        try {
-            Context context = new InitialContext();
-            DataSource dataSource = (DataSource) context.lookup("java:comp/env/jdbc/mysql");
-            return dataSource.getConnection();
-        } catch (NamingException e) {
-            throw e;
-        } catch (SQLException e) {
-            throw e;
-        }
-    }
-
-}
-```
-
-#### list.jsp（EL、JSTL使用）
-
-```html
-<%@ page contentType="text/html; charset=UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>在庫管理システム</title>
-<link rel="stylesheet" href="css/style.css">
-</head>
-<body>
-    <header>
-        <h1>ケロノス雑貨 総本店</h1>
-    </header>
-    <nav>
-        <div>
-            <label>メニュー</label>
-        </div>
-        <ul>
-            <li><a href="list-stock">在庫一覧表示</a></li>
-            <li><a href="create-stock">在庫登録</a></li>
-        </ul>
-    </nav>
-    <article>
-        <div class="text-center">
-            <h2>在庫一覧</h2>
-        </div>
-        <div>
-            <table class="table-list block-center">
-                <thead>
-                    <tr>
-                        <th class="width-id">ID</th>
-                        <th class="width-name">商品名</th>
-                        <th class="width-number">価格</th>
-                        <th class="width-number">数量</th>
-                        <th class="width-date">更新日</th>
-                        <th class="width-btn"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <c:forEach var="stock" items="${listStock}">
-                        <tr class="tr-active">
-                            <td class="width-id text-center"><a href="update-stock?id=${stock.id}">${stock.id}</a></td>
-                            <td class="width-name">${stock.item}</td>
-                            <td class="width-number text-right"><fmt:formatNumber value="${stock.price}" pattern="\#,###,###" /></td>
-                            <td class="width-number text-right">${stock.quantity}</td>
-                            <td class="width-date text-center"><fmt:formatDate value="${stock.updateDate}" pattern="yyyy-MM-dd HH:mm" /></td>
-                            <td class="width-btn text-center">
-                                <form action="delete-stock" method="post">
-                                    <input type="hidden" name="id" value="${stock.id}">
-                                    <button type="submit" class="btn-delete">DELETE</button>
-                                </form>
-                            </td>
-                        </tr>
-                    </c:forEach>
-                </tbody>
-            </table>
-        </div>
-        <div class="text-center">
-            <p class="font-red"><c:if test="${message != null}">${message}</c:if></p>
-        </div>
-    </article>
-    <footer>
-        <label>Copyright (c) 20xx. Kelonos Co, Ltd All Rights Reserved.</label>
-    </footer>
-</body>
-</html>
-```
-
-<br>
-
-#### form.jsp（EL、JSTL使用）
-
-```html
-<%@ page contentType="text/html; charset=UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>在庫管理システム</title>
-<link rel="stylesheet" href="css/style.css">
-</head>
-<body>
-    <header>
-        <h1>ケロノス雑貨 総本店</h1>
-    </header>
-    <nav>
-        <div>
-            <label>メニュー</label>
-        </div>
-        <ul>
-            <li><a href="list-stock">在庫一覧表示</a></li>
-            <li><a href="create-stock">在庫登録</a></li>
-        </ul>
-    </nav>
-    <article>
-        <c:choose>
-            <c:when test="${stock == null}">
-                <div class="text-center">
-                    <h2>在庫登録</h2>
-                </div>
-                <form action="create-stock" method="post">
-                    <table class="block-center">
-                        <tr>
-                            <td class="text-right">商品名：</td>
-                            <td><p><input type="text" class="form-text" name="item" placeholder=" 20文字以内" required></p></td>
-                        </tr>
-                        <tr>
-                            <td class="text-right">価格：</td>
-                            <td><p><input type="number" class="form-number" name="price" min="0" max="1000000" value="0" required></p></td>
-                        </tr>
-                        <tr>
-                            <td class="text-right">数量：</td>
-                            <td><p><input type="number" class="form-number" name="quantity" min="0" max="100" value="0" required></p></td>
-                        </tr>
-                        <tr><td colspan="2" class="text-center"><p><button type="submit" class="btn-default">SEND</button></p></td></tr>
-                    </table>
-                </form>
-            </c:when>
-            <c:when test="${stock != null}">
-                <div class="text-center">
-                    <h2>在庫更新</h2>
-                </div>
-                <form action="update-stock" method="post">
-                    <table class="block-center">
-                        <tr>
-                            <td class="text-right">商品名：</td>
-                            <td><p><input type="text" class="form-text" name="item" value="${stock.item}" required></p></td>
-                        </tr>
-                        <tr>
-                            <td class="text-right">価格：</td>
-                            <td><p><input type="number" class="form-number" name="price" min="0" value="${stock.price}" required></p></td>
-                        </tr>
-                        <tr>
-                            <td class="text-right">数量：</td>
-                            <td><p><input type="number" class="form-number" name="quantity" min="0" max="100" value="${stock.quantity}" required></p></td>
-                        </tr>
-                        <tr><td colspan="2" class="text-center"><p><button type="submit" class="btn-default">SEND</button></p></td></tr>
-                    </table>
-                    <input type="hidden" name="id" value="${stock.id}">
-                </form>
-            </c:when>
-        </c:choose>
     </article>
     <footer>
         <label>Copyright (c) 20xx. Kelonos Co, Ltd All Rights Reserved.</label>
