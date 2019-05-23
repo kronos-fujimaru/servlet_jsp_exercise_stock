@@ -44,7 +44,7 @@ Eclipse上にstock_manageプロジェクトを作成し、以下の構成でフ�
 
 #### 処理手順
 
-<img src="images/list-stock-01.png" alt="在庫一覧画面" width="700">
+<img src="images/list-stock-01.PNG" alt="在庫一覧画面" width="700">
 
 |ファイル名|内容|
 |:-------:|----|
