@@ -135,7 +135,7 @@ public class DataSourceManager {
     </nav>
     <article>
         <c:choose>
-            <c:when test="${stock == null}">
+            <c:when test="${empty stock}">
                 <div class="text-center">
                     <h2>在庫登録</h2>
                 </div>
@@ -148,7 +148,7 @@ public class DataSourceManager {
                     </table>
                 </form>
             </c:when>
-            <c:when test="${stock != null}">
+            <c:otherwise>
                 <div class="text-center">
                     <h2>在庫更新</h2>
                 </div>
@@ -170,7 +170,7 @@ public class DataSourceManager {
                     </table>
                     <input type="hidden" name="id" value="${stock.id}">
                 </form>
-            </c:when>
+            </c:otherwise>
         </c:choose>
     </article>
     <footer>
